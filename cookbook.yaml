@@ -1,0 +1,118 @@
+$globals:
+  version: "8.1"
+  vars:
+    DJANGO_SETTINGS_MODULE: cp_project.settings
+    env_vars: DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+    admin: ${env_vars} django-admin
+    PGDATABASE: cp_database
+    webserver_reload: --reload --reload-extra-file cp_project.yaml
+    webserver_host: 0.0.0.0
+    webserver_port: "8000"
+    webserver_bind: ${webserver_host}:${webserver_port}
+    webserver_timeout: 0
+    shell_plus_extra: --quiet-load
+    p_sync: --sync
+    input: --no-input
+
+install:
+  phony: true
+  keep_ts: true
+  requires:
+    - install_py
+    - migrations
+
+format:
+  phony: true
+  requires:
+    - install_py
+  commands:
+    - black .
+    - ruff check --fix-only .
+
+lint:
+  phony: true
+  requires:
+    - lint_py
+    - lint_migrations
+
+tests:
+  phony: true
+  requires:
+    - install
+  commands:
+    - ${env_vars} pytest ${.extra}
+
+runserver:
+  phony: true
+  requires:
+    - install
+  commands:
+    - >-
+      ${env_vars}
+      gunicorn
+      ${webserver_reload}
+      --bind ${webserver_bind}
+      --timeout ${webserver_timeout}
+      cp_project.wsgi:application
+
+shell:
+  phony: true
+  requires:
+    - install
+  commands:
+    - ${admin} shell_plus ${.extra}
+
+install_py:
+  phony: true
+  keep_ts: true
+  requires:
+    - p-lock.toml
+  commands:
+    - p install ${p_sync} ${.extra}
+
+lint_py:
+  phony: true
+  requires:
+    - install_py
+  commands:
+    - black --check .
+    - p check --lockfile
+    - ruff check .
+    - mypy .
+
+migrations:
+  phony: true
+  keep_ts: true
+  requires:
+    - install_py
+    - db
+    - migrations.lock
+  commands:
+    - ${admin} migrate ${input}
+
+lint_migrations:
+  phony: true
+  requires:
+    - migrations
+  commands:
+    - ${admin} checkmigrations
+
+p-lock.toml:
+  update: true
+  requires:
+    - pyproject.toml
+  commands:
+    - p lock
+
+db:
+  phony: true
+  keep_ts: true
+  exists_only: true
+  existence_check:
+    command: psql -d ${db_base} -tAXc "${db_exists}"
+    stdout: "t\n"
+  vars:
+    db_exists: SELECT EXISTS (SELECT 1 FROM pg_database WHERE datname = '${PGDATABASE}')
+    db_base: template1
+  commands:
+    - createdb ${PGDATABASE}

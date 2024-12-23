@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        {% include "base/meta.html.jinja" %}
+    </head>
+
+    <body>
+        {% include "base/preview.html.jinja" %}
+        {% block content %}{% endblock %}
+        {% include "base/signature.html.jinja" %}
+    </body>
+</html>

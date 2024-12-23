@@ -1,0 +1,82 @@
+/accounts/:
+  POST:
+    201:
+      $type: dict
+      $properties:
+        message:
+          $type: str
+          $regex: OK
+    400:
+      $type: dict
+      $properties:
+        error:
+          $type: dict
+          $properties:
+            message:
+              $type: str
+    409:
+      $type: dict
+      $properties:
+        error:
+          $type: dict
+          $properties:
+            message:
+              $type: str
+
+/accounts/confirm-email/(?P<token_id>\d+):
+  regex: true
+  POST:
+    204:
+      $type: "null"
+    401:
+      $type: dict
+      $properties:
+        error:
+          $type: dict
+          $properties:
+            message:
+              $type: str
+    404:
+      $type: dict
+      $properties:
+        error:
+          $type: dict
+          $properties:
+            message:
+              $type: str
+
+/accounts/token/:
+  POST:
+    200:
+      $type: dict
+      $properties:
+        access:
+          $type: str
+        refresh:
+          $type: str
+    401:
+      $type: dict
+      $properties:
+        error:
+          $type: dict
+          $properties:
+            message:
+              $type: str
+
+/accounts/token/refresh:
+  POST:
+    200:
+      $type: dict
+      $properties:
+        access:
+          $type: str
+        refresh:
+          $type: str
+    401:
+      $type: dict
+      $properties:
+        error:
+          $type: dict
+          $properties:
+            message:
+              $type: str

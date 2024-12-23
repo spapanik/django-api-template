@@ -1,0 +1,15 @@
+# cache
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.cov_cache/
+
+# installation/build artifacts
+.yamk/
+dist/
+
+# local dev
+/*.yaml.d/
+local/
+local.*

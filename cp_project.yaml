@@ -1,0 +1,37 @@
+project:
+  security:
+    CP_PREFIX_SECRET_KEY: Insecure!!fXP7kny5q3oKDV6_yBjs-keX6oZfRqC9pz--LDJ42r8
+
+  tokens:
+    CP_PREFIX_SIGNUP_TOKEN_EXPIRY:
+      days: 31
+    CP_PREFIX_ACCESS_TOKEN_EXPIRY:
+      days: 365
+    CP_PREFIX_REFRESH_TOKEN_EXPIRY:
+      days: 3650
+
+  app:
+    CP_PREFIX_DEBUG: true
+
+    optimus:
+      CP_PREFIX_OPTIMUS_PRIME: 1
+      CP_PREFIX_OPTIMUS_INVERSE: 1
+      CP_PREFIX_OPTIMUS_RANDOM: 0
+
+    email:
+      CP_PREFIX_EMAIL_BACKEND: django.core.mail.backends.filebased.EmailBackend
+      CP_PREFIX_NO_REPLY_USER_PART: Cyberdyne Systems Tech Team
+      CP_PREFIX_NO_REPLY_EMAIL_PART: tech@kuma.ai
+      CP_PREFIX_EMAIL_FILE_PATH: local/emails
+      CP_PREFIX_EMAIL_TEMPLATE_DIR: cp_project/notifications/templates/emails
+
+  database:
+    CP_PREFIX_DB_NAME: cp_database
+
+  servers:
+    CP_PREFIX_BASE_API_SCHEME: http
+    CP_PREFIX_BASE_API_DOMAIN: localhost
+    CP_PREFIX_BASE_API_PORT: 8000
+    CP_PREFIX_BASE_APP_SCHEME: http
+    CP_PREFIX_BASE_APP_DOMAIN: localhost
+    CP_PREFIX_BASE_APP_PORT: 5173
